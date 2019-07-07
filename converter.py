@@ -4,20 +4,51 @@ from sys import argv
 
 from bs4 import BeautifulSoup as Soup
 from loguru import logger
+from markdown2 import Markdown
 
 
-def add_css(parsed):
-    header = parsed.find("h1")
-    link = parsed.new_tag("link")
+def convert_to_html(markdown):
+    return Markdown().convert(markdown)
+
+
+def write_html(filename, content):
+    base_name, _ = filename.split('.')
+    with open('{}.html'.format(base_name), 'w') as f:
+        f.write(content)
+    return '{}.html'.format(base_name)
+
+
+def parse_html(filename):
+    with open(filename) as f:
+        return Soup(f, "html.parser")
+
+
+def add_css(html):
+    header = html.find("h1")
+    link = html.new_tag("link")
     link["rel"] = "stylesheet"
     link["href"] = "https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.css"
     header.insert_before(link)
     header.insert_before("\n")
-    return parsed
+    print(html)
+    return html
+
+
+def write_soup(filename, content):
+    base_name, _ = filename.split('.')
+    with open('{}.html'.format(base_name), 'w') as f:
+        f.write(str(content))
+    return '{}.html'.format(base_name)
 
 
 with open(argv[1]) as f:
-    logger.debug("ready to parse 🗃  {}".format(argv[1]))
-    parsed_file = Soup(f, "html.parser")
-    parsed_plus_css = add_css(parsed_file)
-    logger.debug("HTML to write ✍🏼 \n\n  {}".format(parsed_file))
+    logger.debug("converting to HTML")
+    html = convert_to_html(markdown=f.read())
+    logger.debug("writing HTML")
+    html_file = write_html(filename=argv[1], content=html)
+    logger.debug("parsing HTML")
+    parsed_html = parse_html(html_file)
+    print(parsed_html)
+    logger.debug("adding CSS link")
+    parsed_plus_css = add_css(html=parsed_html)
+    write_soup(filename=argv[1], content=parsed_plus_css)
