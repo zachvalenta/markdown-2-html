@@ -4,11 +4,11 @@ from sys import argv
 
 from bs4 import BeautifulSoup as Soup
 from loguru import logger
-from markdown2 import Markdown
+import markdown2
 
 
 def convert_to_html(markdown):
-    return Markdown().convert(markdown)
+    return markdown2.markdown(markdown, extras=["fenced-code-blocks"])
 
 
 def write_html(filename, content):
@@ -30,7 +30,6 @@ def add_css(html):
     link["href"] = "https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.css"
     header.insert_before(link)
     header.insert_before("\n")
-    print(html)
     return html
 
 
@@ -48,7 +47,6 @@ with open(argv[1]) as f:
     html_file = write_html(filename=argv[1], content=html)
     logger.debug("parsing HTML")
     parsed_html = parse_html(html_file)
-    print(parsed_html)
     logger.debug("adding CSS link")
     parsed_plus_css = add_css(html=parsed_html)
     write_soup(filename=argv[1], content=parsed_plus_css)
