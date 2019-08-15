@@ -1,10 +1,20 @@
 #!/Users/zach/Desktop/zvmac/materials/sw/za/industry/m2h/venv/bin/python3
 
-from sys import argv
+from argparse import ArgumentParser
+from sys import argv, exit
 
 from bs4 import BeautifulSoup as Soup
 from loguru import logger
 import markdown2
+
+
+def parse_args():
+    parser = ArgumentParser()
+    parser.add_argument("-m", "--markdown", help="Markdown file to convert")
+    if len(argv) == 1:
+        parser.print_help()
+        exit()
+    return parser.parse_args()
 
 
 def convert_to_html(markdown):
@@ -40,13 +50,16 @@ def write_soup(filename, content):
     return '{}.html'.format(base_name)
 
 
-with open(argv[1]) as f:
+args = parse_args()
+
+with open(args.markdown) as f:
     logger.debug("converting to HTML")
     html = convert_to_html(markdown=f.read())
     logger.debug("writing HTML")
-    html_file = write_html(filename=argv[1], content=html)
+    html_file = write_html(filename=args.markdown, content=html)
     logger.debug("parsing HTML")
     parsed_html = parse_html(html_file)
     logger.debug("adding CSS link")
     parsed_plus_css = add_css(html=parsed_html)
-    write_soup(filename=argv[1], content=parsed_plus_css)
+    logger.debug("adding CSS link")
+    write_soup(filename=args.markdown, content=parsed_plus_css)
