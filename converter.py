@@ -1,4 +1,4 @@
-#!/Users/zach/Desktop/zvmac/materials/sw/za/industry/m2h/venv/bin/python3
+#!/Users/zach/Desktop/zvmac/materials/sw/lang/html-css/m2h/venv/bin/python3
 
 from argparse import ArgumentParser
 import fileinput
@@ -11,7 +11,7 @@ import markdown2
 
 def parse_args():
     parser = ArgumentParser()
-    parser.add_argument("-m", "--markdown", help="Markdown file to convert")  # switch to -f
+    parser.add_argument("-f", "--file", help="Markdown file to convert")
     parser.add_argument("-c", "--chart", help="add chart")
     if len(argv) == 1:
         parser.print_help()
@@ -69,11 +69,11 @@ def write_soup(filename, content):
 
 args = parse_args()
 
-with open(args.markdown) as f:
+with open(args.file) as f:
     logger.debug("converting to HTML")
     html = convert_to_html(markdown=f.read())
     logger.debug("writing HTML")
-    html_file = write_html(filename=args.markdown, content=html)
+    html_file = write_html(filename=args.file, content=html)
     logger.debug("parsing HTML")
     parsed_html = parse_html(html_file)
     logger.debug("adding CSS link")
@@ -81,7 +81,7 @@ with open(args.markdown) as f:
     if args.chart:
         logger.debug(f"adding {args.chart}")
         charted_html = add_chart(html=css_html)
-        html = write_soup(filename=args.markdown, content=charted_html)
+        html = write_soup(filename=args.file, content=charted_html)
         fix_ampersand(html)
     else:
-        write_soup(filename=args.markdown, content=css_html)
+        write_soup(filename=args.file, content=css_html)
