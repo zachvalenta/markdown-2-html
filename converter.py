@@ -39,7 +39,7 @@ def add_css(html):
     header = html.find("h2")
     link = html.new_tag("link")
     link["rel"] = "stylesheet"
-    link["href"] = "https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.css"
+    link["href"] = "styles.css"
     header.insert_before(link)
     header.insert_before("\n")
     return html
