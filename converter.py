@@ -45,6 +45,58 @@ def add_css(html):
     return html
 
 
+def add_header(html):
+    # CREATE DIV AND LIST
+    div = html.new_tag("div")
+    ul = html.new_tag("ul")
+    # CREATE LIST EL
+    li = html.new_tag("li")
+    li.string = "home"
+    ul.insert(1, li)
+    li2 = html.new_tag("li")
+    li2.string = "book reviews"
+    ul.insert(1, li2)
+    # add class to list
+    ul["class"] = "header"
+    div["style"] = "display: block"
+    ul["style"] = "list-style-type: none; display: block; margin-block-start: 1em; margin-block-end: 1em; padding-inline-start: 40px"
+    li["style"] = "display: inline; margin: 5px"
+    li2["style"] = "display: inline; margin: 5px"
+    # ADD LIST TO DIV
+    div.insert(1, ul)
+    # ADD DIV BEFORE TITLE
+    title = html.find("h2")
+    title.insert_before(div)
+    title.insert_before(html.new_tag("hr"))
+    title.insert_before("\n")
+    # ADD RULE BEFORE TITLE
+    return html
+
+
+def add_footer(html):
+    # CREATE DIV AND LIST
+    div = html.new_tag("div")
+    ul = html.new_tag("ul")
+    # CREATE LIST EL
+    li = html.new_tag("li")
+    li.string = "home"
+    ul.insert(1, li)
+    li2 = html.new_tag("li")
+    li2.string = "book reviews"
+    ul.insert(1, li2)
+    # add class to list
+    ul["class"] = "header"
+    div["style"] = "display: block"
+    ul["style"] = "list-style-type: none; display: block; margin-block-start: 1em; margin-block-end: 1em; padding-inline-start: 40px"
+    li["style"] = "display: inline; margin: 5px"
+    li2["style"] = "display: inline; margin: 5px"
+    # ADD LIST TO DIV
+    div.insert(1, ul)
+    # html.body.insert(len(html.body.contents), div)
+    html.append(html.new_tag("hr"))
+    html.append(div)
+    return html
+
 def add_chart(html):
     link = html.find("link")
     img = html.new_tag("img")
@@ -72,12 +124,19 @@ args = parse_args()
 with open(args.file) as f:
     logger.debug("converting to HTML")
     html = convert_to_html(markdown=f.read())
+
     logger.debug("writing HTML")
     html_file = write_html(filename=args.file, content=html)
+
     logger.debug("parsing HTML")
     parsed_html = parse_html(html_file)
+
     logger.debug("adding CSS link")
     css_html = add_css(html=parsed_html)
+
+    css_html = add_header(html=css_html)
+    css_html = add_footer(html=css_html)
+
     if args.chart:
         logger.debug(f"adding {args.chart}")
         charted_html = add_chart(html=css_html)
