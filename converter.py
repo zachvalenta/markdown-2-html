@@ -59,7 +59,7 @@ def add_header(html):
     # add class to list
     ul["class"] = "header"
     div["style"] = "display: block"
-    ul["style"] = "list-style-type: none; display: block; margin-block-start: 1em; margin-block-end: 1em; padding-inline-start: 40px"
+    ul["style"] = "list-style-type: none; display: block; padding-inline-start: 2px"
     li["style"] = "display: inline; margin: 5px"
     li2["style"] = "display: inline; margin: 5px"
     # ADD LIST TO DIV
