@@ -1,4 +1,5 @@
 #!/Users/zach/Desktop/zvmac/materials/sw/lang/html-css/m2h/venv/bin/python3
+#!/Users/zach/.pyenv/versions/3.12.1/bin/python
 
 from argparse import ArgumentParser
 import fileinput
@@ -134,8 +135,8 @@ with open(args.file) as f:
     logger.debug("adding CSS link")
     css_html = add_css(html=parsed_html)
 
-    css_html = add_header(html=css_html)
-    css_html = add_footer(html=css_html)
+    # css_html = add_header(html=css_html)
+    # css_html = add_footer(html=css_html)
 
     if args.chart:
         logger.debug(f"adding {args.chart}")
